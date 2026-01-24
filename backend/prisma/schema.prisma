@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password_hash String
+  nombre        String?
+  apellido      String?
+  avatar        String?       // URL o Base64 de la imagen
+  theme         String        @default("light") // light | dark
+  creado_en     DateTime      @default(now())
+  vencimientos  Vencimiento[]
+  pushSubscriptions PushSubscription[]
+}
+
+model PushSubscription {
+  id         Int      @id @default(autoincrement())
+  usuario_id Int
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  creado_en  DateTime @default(now())
+  usuario    Usuario  @relation(fields: [usuario_id], references: [id])
+}
+
+model Vencimiento {
+  id                 Int        @id @default(autoincrement())
+  usuario_id         Int
+  titulo             String
+  fecha_vencimiento  DateTime
+  frecuencia         Frecuencia @default(UNICO)
+  activo             Boolean    @default(true)
+  ultima_notificacion DateTime?
+  creado_en          DateTime   @default(now())
+  usuario            Usuario    @relation(fields: [usuario_id], references: [id])
+}
+
+enum Frecuencia {
+  UNICO
+  MENSUAL
+  ANUAL
+}

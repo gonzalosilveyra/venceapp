@@ -1,0 +1,49 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Crear cuenta</h1>
+            <p class="text-gray-500 mt-2">Empieza a organizar tus pagos hoy</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+            <div *ngIf="error" class="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100">
+                {{ error }}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-text">Nombre</label>
+                    <input type="text" formControlName="nombre" class="input-field" placeholder="Tu nombre">
+                </div>
+                <div>
+                    <label class="label-text">Apellido</label>
+                    <input type="text" formControlName="apellido" class="input-field" placeholder="Tu apellido">
+                </div>
+            </div>
+
+            <div>
+                <label class="label-text">Email</label>
+                <input type="email" formControlName="email" class="input-field" placeholder="ejemplo@correo.com">
+            </div>
+
+            <div>
+                <label class="label-text">Contraseña</label>
+                <input type="password" formControlName="password" class="input-field"
+                    placeholder="•••••••• (min 6 caracteres)">
+            </div>
+
+            <button type="submit" [disabled]="loading || registerForm.invalid"
+                class="w-full btn-primary flex justify-center py-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span *ngIf="!loading">Registrarse</span>
+                <span *ngIf="loading">Creando cuenta...</span>
+            </button>
+
+            <div class="text-center mt-6">
+                <span class="text-gray-600 text-sm">¿Ya tienes cuenta? </span>
+                <a routerLink="/login" class="text-primary hover:text-indigo-700 text-sm font-medium transition-colors">
+                    Inicia sesión
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

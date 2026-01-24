@@ -1,0 +1,101 @@
+<app-navbar></app-navbar>
+<div class="max-w-xl mx-auto px-4 py-8 animate-fade-in-up">
+    <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+
+        <!-- Header / Banner -->
+        <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+
+        <!-- Avatar Section -->
+        <div class="relative px-8 -mt-16 text-center">
+            <div class="relative inline-block group">
+                <div class="w-32 h-32 bg-white rounded-full p-1 shadow-lg mx-auto overflow-hidden relative">
+                    <!-- Avatar Image -->
+                    <img *ngIf="avatarPreview && !avatarLoading" [src]="avatarPreview" class="w-full h-full object-cover rounded-full">
+                    
+                    <!-- Loading State Overlay -->
+                    <div *ngIf="avatarLoading" class="w-full h-full bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600"></div>
+                    </div>
+
+                    <!-- Fallback Initials -->
+                    <div *ngIf="!avatarPreview && !avatarLoading"
+                        class="w-full h-full bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-4xl font-bold text-indigo-600 dark:text-indigo-400">
+                        {{ user?.nombre ? user?.nombre?.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase()
+                        }}
+                    </div>
+                </div>
+                <!-- Camera Icon Overlay -->
+                <label
+                    class="absolute bottom-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow cursor-pointer text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <input type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*" [disabled]="avatarLoading">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </label>
+            </div>
+            <h2 class="mt-4 text-2xl font-bold text-gray-800 dark:text-white">{{ user?.nombre || 'Usuario' }} {{ user?.apellido || '' }}
+            </h2>
+            <p class="text-gray-500">{{ user?.email }}</p>
+        </div>
+
+        <!-- Form Section -->
+        <div class="p-8">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+                <div *ngIf="success"
+                    class="bg-green-50 text-green-700 p-3 rounded-lg text-sm border border-green-100 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    {{ success }}
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="label-text">Nombre</label>
+                        <input type="text" formControlName="nombre" class="input-field">
+                    </div>
+                    <div>
+                        <label class="label-text">Apellido</label>
+                        <input type="text" formControlName="apellido" class="input-field">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="label-text">Email</label>
+                    <input type="email" formControlName="email" class="input-field">
+                </div>
+
+                <div>
+                    <label class="label-text">Tema</label>
+                    <div class="flex items-center space-x-4 mt-2">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" formControlName="theme" value="light"
+                                class="form-radio text-indigo-600">
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Claro ☀️</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" formControlName="theme" value="dark" class="form-radio text-gray-800">
+                            <span class="ml-2 text-gray-700 dark:text-gray-300">Oscuro 🌙</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" [disabled]="loading || form.invalid"
+                        class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span *ngIf="!loading">Guardar cambios</span>
+                        <span *ngIf="loading">Guardando...</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
