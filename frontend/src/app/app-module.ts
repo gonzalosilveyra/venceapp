@@ -1,7 +1,9 @@
-import { NgModule, provideBrowserGlobalErrorListeners, isDevMode } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -11,7 +13,6 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { VencimientoForm } from './pages/vencimiento-form/vencimiento-form';
 import { Profile } from './pages/profile/profile';
 import { Navbar } from './shared/components/navbar/navbar';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -25,20 +26,16 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    
-      ServiceWorkerModule.register('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        // Register the ServiceWorker as soon as the application is stable
-        // or after 30 seconds (whichever comes first).
-        registrationStrategy: 'registerWhenStable:30000'
-      })
-    
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
-    provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [App]

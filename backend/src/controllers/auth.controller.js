@@ -1,6 +1,7 @@
 import prisma from '../prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { sendWelcomeEmail } from '../services/email.service.js';
 
 export const registro = async (req, res) => {
     try {
@@ -26,6 +27,11 @@ export const registro = async (req, res) => {
         });
 
         const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        // Enviar email de bienvenida de forma asíncrona (no bloqueante)
+        sendWelcomeEmail(user.email, user.nombre || user.apellido)
+            .then(() => console.log(`✅ Email de bienvenida enviado a ${user.email}`))
+            .catch(err => console.error(`❌ Error enviando email de bienvenida a ${user.email}:`, err));
 
         res.status(201).json({
             token,

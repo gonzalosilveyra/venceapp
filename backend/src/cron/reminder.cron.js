@@ -5,7 +5,7 @@ import { sendPushNotification } from '../controllers/notifications.controller.js
 
 export const initCronJob = () => {
     // Ejecutar cada día a las 8:00 AM
-    cron.schedule('0 8 * * *', async () => {
+    cron.schedule('0 7 * * *', async () => {
         console.log('Ejecutando cron de recordatorios...');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -92,7 +92,14 @@ export const initCronJob = () => {
 
             if (shouldNotify) {
                 console.log(`Enviando notificación para ${v.titulo} a ${v.usuario.email}`);
+
+                // Enviar email
                 await sendEmail(v.usuario.email, subject, message);
+
+                // Enviar notificación push
+                const pushTitle = subject.replace(/🔔|⚠️|🚨/g, '').trim();
+                const pushBody = `${v.titulo} - ${dueDate.toLocaleDateString('es-ES')}`;
+                await sendPushNotification(v.usuario_id, pushTitle, pushBody);
 
                 let updateData = {
                     ultima_notificacion: new Date()
